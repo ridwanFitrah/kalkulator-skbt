@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitung Nilai Akhir CPNS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            width: 200px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        td {
+            background-color: #e7e7e7;
+        }
+        @media (max-width: 768px) {
+            input[type="text"], input[type="number"], button {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            table th, table td {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            table th, table td {
+                font-size: 10px;
+            }
+
+            .table-container {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Hitung Nilai Akhir CPNS</h2>
+    <form id="cpnsForm">
+        <label for="nama">Nama Peserta:</label>
+        <input type="text" id="nama" name="nama" required><br><br>
+
+        <label for="nilaiSKD">Masukkan Nilai SKD (0-550):</label>
+        <input type="number" id="nilaiSKD" name="nilaiSKD" min="0" max="550" required><br><br>
+
+        <label for="nilaiSKb">Masukkan Nilai SKB CAT(0-500):</label>
+        <input type="number" id="nilaiSKb" name="nilaiSKb" min="0" max="500" required><br><br>
+
+
+        <label for="nilaiA">Masukkan Nilai Kesamaptaan A (0-100):</label>
+        <input type="number" id="nilaiA" name="nilaiA" min="0" max="100" required><br><br>
+
+        <label for="nilaipushup">Masukkan Nilai Push Up (0-100):</label>
+        <input type="number" id="nilaipushup" name="nilaipushup" min="0" max="100" required><br><br>
+
+        <label for="nilaipullup">Masukkan Nilai Pull Up (0-100):</label>
+        <input type="number" id="nilaipullup" name="nilaipullup" min="0" max="100" required><br><br>
+
+        <label for="nilaishitup">Masukkan Nilai Shit Up (0-100):</label>
+        <input type="number" id="nilaishitup" name="nilaishitup" min="0" max="100" required><br><br>
+
+        <label for="nilaishuttlerun">Masukkan Nilai Shuttle Run (0-100):</label>
+        <input type="number" id="nilaishuttlerun" name="nilaishuttlerun" min="0" max="100" required><br><br>
+
+
+
+
+        <button type="button" onclick="hitungNilaiAkhir()">Hitung Nilai Akhir</button>
+    </form>
+
+    <!-- Tabel untuk menampilkan hasil -->
+    <table id="resultTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Nama Peserta</th>
+                <th>Nilai SKD</th>
+                <th>Bobot SKD 40%</th>
+                <th>Nilai Kesamaptaan A</th>
+                <th>Nilai Push Up</th>
+                <th>Nilai Shit Up</th>
+                <th>Nilai Pull Up</th>
+                <th>Nilai Shuttle Run</th>
+                <th>Nilai Kesamaptaan B</th>
+                <th>Nilai SKB CAT</th>
+                <th>Bobot SKB 70%</th>
+                <th>Bobot SKB CAT + tambahan</th>
+                <th>Nilai Akhir CPNS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Baris data akan ditambahkan di sini -->
+        </tbody>
+    </table>
+
+    <script>
+        function hitungNilaiAkhir() {
+            // Ambil nilai dari form
+            const nama = document.getElementById('nama').value;
+            const nilaiSKD = parseFloat(document.getElementById('nilaiSKD').value);
+            const nilaiSKB = parseFloat(document.getElementById('nilaiSKb').value);
+            const nilai_kesamaptaan_A = parseFloat(document.getElementById('nilaiA').value);
+            const nilai_Push_up = parseFloat(document.getElementById('nilaipushup').value);
+            const nilai_Pull_up = parseFloat(document.getElementById('nilaipullup').value);
+            const nilai_shit_up = parseFloat(document.getElementById('nilaishitup').value);
+            const nilai_shuttle_run = parseFloat(document.getElementById('nilaishuttlerun').value);
+
+            // Validasi input
+            if (!nama){
+                alert("Input tidak valid! Pastikan semua kolom terisi dengan benar.");
+                return;
+            }
+            // bobot SKD 40%
+            let bobot_SKD= nilaiSKD/5.5*0.4;
+            let Kesamaptaan_b= nilai_Push_up+nilai_Pull_up+nilai_shit_up
+            +nilai_shuttle_run;
+            let nilai_Kesamaptaan_b=Kesamaptaan_b/4
+
+            let bobot_SKB_cat= nilaiSKB/5.0*0.7;
+            let bobot_SKB_noncat=(nilai_Kesamaptaan_b+ nilai_kesamaptaan_A)/2;
+            let bobot_SKB=bobot_SKB_cat+(bobot_SKB_noncat*0.3);
+            // Hitung nilai akhir CPNS
+            const nilaiAkhir = bobot_SKD + bobot_SKB;
+
+            // Menampilkan hasil dalam tabel
+            const table = document.getElementById('resultTable');
+            const tbody = table.querySelector('tbody');
+            
+            // Buat baris baru dan masukkan data
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${nama}</td>
+                <td>${nilaiSKD}</td>
+                <td>${bobot_SKD.toFixed(3)}</td>
+                <td>${nilai_kesamaptaan_A}</td>
+                <td>${nilai_Push_up}</td>
+                <td>${nilai_Pull_up}</td>
+                <td>${nilai_shit_up}</td>
+                <td>${nilai_shuttle_run}</td>
+                <td>${nilai_Kesamaptaan_b}</td>
+                <td>${nilaiSKB}</td>
+                <td>${bobot_SKB_cat.toFixed(3)}</td>
+                <td>${bobot_SKB.toFixed(3)}</td>
+                <td>${nilaiAkhir.toFixed(3)}</td>
+            `;
+            tbody.appendChild(row);
+
+            // Menampilkan tabel
+            table.style.display = 'block';
+
+        urutkanTabel();
+        }
+        function urutkanTabel() {
+            const table = document.getElementById("resultTable");
+            const rows = Array.from(table.getElementsByTagName("tr")).slice(1); // Ambil semua baris data, kecuali header
+
+            // Urutkan berdasarkan nilai akhir (kolom ke-7)
+            rows.sort(function(a, b) {
+                const nilaiAkhirA = parseFloat(a.cells[12].innerText);
+                const nilaiAkhirB = parseFloat(b.cells[12].innerText);
+
+                // Urutkan dari besar ke kecil
+                return nilaiAkhirB - nilaiAkhirA;
+            });
+
+            // Masukkan baris yang sudah diurutkan kembali ke dalam tabel
+            const tbody = table.querySelector("tbody");
+            rows.forEach(row => tbody.appendChild(row));
+        }
+    </script>
+
+</body>
+</html>
